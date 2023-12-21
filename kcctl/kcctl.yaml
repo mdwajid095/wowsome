@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kcctl
+  namespace: wowsome
+spec:
+  containers:
+  - name: kcctl
+    image: mdwajid095/kcctl:v1.2
+    command: ['sh', '-c', 'echo "Hello, Welcome to the kcctl!!!" && sleep infinity']
+    volumeMounts:
+    - name: kcctl-conf
+      mountPath: /mnt/secrets
+  volumes:
+  - name: kcctl-conf
+    secret:
+      secretName: kcctl-secret
+  imagePullSecrets:
+  - name: nexus
+  restartPolicy: Never
