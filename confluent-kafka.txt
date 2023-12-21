@@ -1,0 +1,176 @@
+sudo podman run -it --rm --network=host -v /home/confluent/certs:/certs:z  edenhill/kcat:1.7.0 -b kafka.bootstrap.url:9092 -F /certs/readonly.properties -J  -t topic.charging.ccs.Usage-MM-v1 -C
+
+-----------------------------------------------------------------------------------------------
+sudo /home/wajid/confluent-6.2.0/bin/kafka-avro-console-consumer \
+--topic topic.billing.FinanceAccounting.SubledgerEntries-MM-v1 \
+--bootstrap-server kafka.bootstrap.url:9092 \
+--from-beginning \
+--skip-message-on-error \
+--property print.timestamp=true \
+--consumer.config adm.properties \
+--property schema.registry.url=https://schemaregistry.url \
+--property schema.registry.ssl.truststore.location=/home/wajid/prod-tefcerts/kafka-external-truststore.p12 \
+--property schema.registry.ssl.truststore.password=mystorepassword \
+--property schema.registry.ssl.keystore.location=/home/wajid/prod-tefcerts/kafka-external-keystore.p12 \
+--property schema.registry.ssl.keystore.password=mystorepassword
+
+
+sudo /home/wajid/confluent-6.2.0/bin/kafka-console-consumer \
+--bootstrap-server kafka.bootstrap.url:9092 \
+--topic topic.charging.ccs.Purchase-MM-v1 \
+--consumer.config adm.properties \
+--property print.key=false \
+--property print.timestamp=true \
+--property print.value=false \
+--from-beginning \
+--max-messages=10 \
+--partition=9
+
+#console-producer
+sudo /home/wajid/confluent-6.2.0/bin/kafka-avro-console-producer \
+--topic topic.epc.deltabuilder.PublishPSEvents-MM-v1 \
+--bootstrap-server kafka.bootstrap.url:9092 \
+--producer.config adm.properties \
+--property value.schema.id=388 \
+--property key.schema.id=389 \
+--property key.separator="-" \
+--property schema.registry.url=https://schemaregistry.url:443 \
+--property schema.registry.ssl.truststore.location=/home/wajid/prod-tefcerts/kafka-external-truststore.p12 \
+--property schema.registry.ssl.truststore.password=f1wjZsA3IcNwjAnp \
+--property schema.registry.ssl.keystore.location=/home/wajid/prod-tefcerts/kafka-external-keystore.p12 \
+--property schema.registry.ssl.keystore.password=f1wjZsA3IcNwjAnp
+
+
+cat events.json | sudo /home/wajid/confluent-6.2.0/bin/kafka-avro-console-producer \
+--topic topic.som.flowone.ServiceOrderResponse-v1 \
+--bootstrap-server kafka.bootstrap.url:9092 \
+--producer.config adm.properties \
+--property value.schema="$(< /home/wajid/schema.avsc)" \
+--property schema.registry.url=https://schemaregistry.url \
+--property schema.registry.ssl.truststore.location=/home/wajid/prod-tefcerts/kafka-external-truststore.p12 \
+--property schema.registry.ssl.truststore.password=mystorepassword \
+--property schema.registry.ssl.keystore.location=/home/wajid/prod-tefcerts/kafka-external-keystore.p12 \
+--property schema.registry.ssl.keystore.password=mystorepassword
+
+#producer-perf-test
+sudo /home/wajid/confluent-6.2.0/bin/kafka-producer-perf-test \
+  --topic test \
+  --producer-props bootstrap.servers=kafka.bootstrap.url:9092 \
+  --num-records 10 \
+  --record-size 100 \
+  --throughput -1 \
+  --producer.config adm.properties
+  
+#consumer-perf-test
+sudo /home/wajid/confluent-6.2.0/bin/kafka-consumer-perf-test \
+  --topic test \
+  --bootstrap-server kafka.bootstrap.url:9092 \
+  --messages 15 \
+  --threads 1 \
+  --consumer.config adm.properties \
+  --show-detailed-stats
+  
+
+
+#create-topic
+sudo /home/wajid/confluent-6.2.0/bin/kafka-topics --bootstrap-server kafka.bootstrap.url:9092 --create --topic topic.com.ProductOrderStateChange-mm-v1 --partitions 3 --replication-factor 3 --command-config adm.properties
+
+#delete-topic
+sudo /home/wajid/confluent-6.2.0/bin/kafka-topics --bootstrap-server kafka.bootstrap.url:9092 --delete --topic topic.com.ProductOrderStateChange-mm-v1 --command-config adm.properties
+
+#list-topics
+sudo /home/wajid/confluent-6.2.0/bin/kafka-topics --bootstrap-server kafka.bootstrap.url:9092 --list --command-config adm.properties
+
+#describe-topic
+sudo /home/wajid/confluent-6.2.0/bin/kafka-topics --bootstrap-server kafka.bootstrap.url:9092 --describe --topic topic.com.ProductOrderStateChange-mm-v1 --command-config adm.properties
+
+#list-acls-by-topic
+sudo /home/wajid/confluent-6.2.0/bin/kafka-acls --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --list --topic topic.ccm.EECC-Communication-v1
+
+#list-acls-by-topic-prefixed
+sudo /home/wajid/confluent-6.2.0/bin/kafka-acls --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --list |grep topic.cim.requestexport-B2B-v -4
+
+#list-acls-by-group
+sudo /home/wajid/confluent-6.2.0/bin/kafka-acls --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --list --group compax
+
+#add-write-acls
+sudo /home/wajid/confluent-6.2.0/bin/kafka-acls --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --add --allow-principal User:compax.emp.gcp.de.pri.o2.com --operation write --topic topic.com.ProductOrderStateChange-mm-v1
+
+#add-read-acls
+sudo /home/wajid/confluent-6.2.0/bin/kafka-acls --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --add --allow-principal User:compax.emp.gcp.de.pri.o2.com --operation read --topic topic.com.ProductOrderStateChange-mm-v1 --group compax
+
+#remove-acls
+sudo /home/wajid/confluent-6.2.0/bin/kafka-acls --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --remove --allow-principal User:compax.emp.gcp.de.pri.o2.com --operation write --operation read --operation all  --topic topic.com.ProductOrderStateChange-mm-v1 --resource-pattern-type prefixed --force
+
+#add-acls-with-topic-prefix
+sudo /home/wajid/confluent-6.2.0/bin/kafka-acls --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --add --allow-principal User:compax.emp.gcp.de.pri.o2.com --operation write --operation read --operation create --operation describe --operation AlterConfigs --operation Alter --topic topic.logistics.tegscm- --topic topic.logistics.tegscm. --resource-pattern-type prefixed
+
+#reset-offsets
+sudo /home/wajid/confluent-6.2.0/bin/kafka-consumer-groups --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --describe --group hansenom-prod-nms-1
+
+sudo /home/wajid/confluent-6.2.0/bin/kafka-consumer-groups --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --group raittaep --topic topic.com.ProductOrderStateChange-mm-v1 --reset-offsets --to-earliest --execute
+
+sudo /home/wajid/confluent-6.2.0/bin/kafka-consumer-groups --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --group raittaep --topic topic.com.ProductOrderStateChange-mm-v1 --reset-offsets --to-latest --execute
+
+sudo /home/wajid/confluent-6.2.0/bin/kafka-consumer-groups --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --group raittaep --topic topic.com.ProductOrderStateChange-mm-v1 --reset-offsets --shift-by "-10" --execute
+
+sudo /home/wajid/confluent-6.2.0/bin/kafka-consumer-groups --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --group raittaep --topic topic.com.ProductOrderStateChange-mm-v1 --reset-offsets --to-offset 1547 --execute
+
+sudo /home/wajid/confluent-6.2.0/bin/kafka-consumer-groups --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --group raittaep --topic topic.com.ProductOrderStateChange-mm-v1 --reset-offsets --to-offset --to-datetime 2017-08-04T00:00:00.000 --execute
+
+
+#clean-up-a-topic
+7d= 604800000 ms
+sudo /home/wajid/confluent-6.2.0/bin/kafka-configs --alter --bootstrap-server kafka.bootstrap.url:9092 --entity-type topics --entity-name topic.epc.deltabuilder.PublishPSEvents-MM-v1 --add-config retention.ms=0 --command-config adm.properties
+
+#partition-set
+sudo /home/wajid/confluent-6.2.0/bin/kafka-topics --bootstrap-server kafka.bootstrap.url:9092  --alter --topic topic.com.ProductOrderStateChange-mm-v1 --partitions 10 --command-config adm.properties
+
+#re-assign-partitions
+sudo /home/confluent/confluent-7.1.1/bin/kafka-reassign-partitions --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --reassignment-json-file /tmp/name.json --execute --broker-list 0,1,2
+
+
+====================================================
+
+kafka-acls --bootstrap-server kafka-0.kafka.ns.svc.cluster.local:9071 --command-config /tmp/client.properties --add --allow-principal User:revass --operation read --operation describe --group revenueassurance- --resource-pattern-type prefixed
+
+kafka-acls --bootstrap-server kafka-0.kafka.ns.svc.cluster.local:9071 --command-config /tmp/client.properties --add --allow-principal User:revass --operation write  --operation describe   --transactional-id  revenueassurance- --resource-pattern-type prefixed
+
+kafka-acls --bootstrap-server kafka-0.kafka.ns.svc.cluster.local:9071 --command-config /tmp/client.properties --add --allow-principal User:revass --operation read --operation write --operation create --operation describe --operation AlterConfigs --operation Alter --topic revenueassurance. --topic revenueassurance- --resource-pattern-type prefixed
+
+=====================================================
+
+##connectors
+
+curl -k https://localhost:8083/connectors/
+curl -k -X POST -H "Content-Type: application/json" https://localhost:8083/connectors/ -d @sample.json
+curl -k -X PUT https://connect.ns.svc.cluster.local:8083/connectors/CCM-interaction-CIM-MM-Sink/tasks/0/restart
+curl -k -X PUT https://connect.ns.svc.cluster.local:8083/connectors/CCM-interaction-CIM-MM-Sink/pause
+curl -k -X PUT https://connect.ns.svc.cluster.local:8083/connectors/CCM-interaction-CIM-MM-Sink/resume
+curl -X DELETE -k -u test:test@123 https://10.170.142.240/connectors/sfdctecosuserdetails
+
+=====================================================
+ 
+#!/bin/bash
+file=topics.txt
+for i in `cat $file`
+do
+export name=$i
+kafka-topics --bootstrap-server kafka.ffm-prod.svc.cluster.local:9071 --alter --topic $i --partitions 10 --command-config adm.properties
+echo "$i"
+done
+
+=====================================================
+
+curl -k -X GET https://schemaregistry.url/subjects/topic.payment.PaymentConfirmationNotification-MM-v1-value/versions/latest/schema
+
+curl -k -X "PUT" -H "Accept: application/vnd.schemaregistry.v1+json" -H "Content-Type: application/vnd.schemaregistry.v1+json" -d '{"mode":"READWRITE"}' https://schemaregistry.url:443/mode/topic.om.Activation-BB-v1-value
+
+curl -k -X "POST" -H "Accept: application/vnd.schemaregistry.v1+json" -H "Content-Type: application/vnd.schemaregistry.v1+json" --data @/Users/me/schema.json  https://schemaregistry.url:443/mode/topic.om.Activation-BB-v1-value
+
+curl -k -X DELETE https://schemaregistry.url/subjects/topic.tecos.commissioning.DeActivationforDS-BB-v1-key
+curl -k -X DELETE https://schemaregistry.url/subjects/topic.tecos.commissioning.DeActivationforDS-BB-v1-key?permanent=true
+
+sudo /home/wajid/confluent-6.2.0/bin/kafka-consumer-groups --bootstrap-server kafka.e2e2.emp-test.gcp.de.pri.o2.com:9092 --group mscim-campaignintraction --topic topic.aep.CampaignInteractionMangement-MM-v1 --reset-offsets --shift-by "-100" --command-config e2e2adm.properties --execute
+
+
