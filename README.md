@@ -2,10 +2,15 @@
 
 ## Table of Contents
 
+- kind-cluster
 - kcctl
 - kafka
 - k8s
 
+
+## kind-cluster
+
+`kind` is a tool for running local Kubernetes clusters using Docker container “nodes”. It was primarily designed for testing Kubernetes itself, but may be used for local development or CI. To use kind, you need to have go 1.16+ and Docker or Podman installed. Download and follow the instructions from file `kind-cluster.doc`.
 
 ## kcctl
 
