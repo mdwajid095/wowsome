@@ -1,11 +1,14 @@
 # wowsome
 
+Connect: https://mdwajid095.github.io/
+
 ## Table of Contents
 
 - kind-cluster
 - kcctl
 - kafka
 - k8s
+- kube-plugins
 
 
 ## kind-cluster
@@ -18,8 +21,12 @@
 
 ## kafka
 
-Adding all most used and important command for confluent kafka.
+Adding all most used and important command for `confluent kafka`.
 
 ## k8s
 
-Adding all important required command for kubernetes.
+Adding all important required command for `kubernetes`.
+
+## kube-plugins
+
+`kube-plugins` zipped directory contains all the important plugins required or to helps for k8s operation in more efficient ways.
