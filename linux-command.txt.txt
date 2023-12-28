@@ -1,0 +1,8 @@
+export WORKING_DIR=/home/umang_seth_external_gcp_telefoni/production/telefonica-emp/env
+
+PATH=$PATH:/home/wajid/kcctl/kcctl-1.0.0.Alpha5-linux-x86_64/bin
+
+sudo chown wajid:wajid emp.json
+
+sudo chmod 775 emp.json
+
