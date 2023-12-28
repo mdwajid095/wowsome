@@ -1,5 +1,23 @@
+API: https://docs.confluent.io/operator/current/co-api.html#tag/Kafka
+
 sudo podman run -it --rm --network=host -v /home/confluent/certs:/certs:z  edenhill/kcat:1.7.0 -b kafka.bootstrap.url:9092 -F /certs/readonly.properties -J  -t topic.charging.ccs.Usage-MM-v1 -C
 
+cat > readonly.properties for kcat
+bootstrap.servers=kafka.bootstrap.url:9092
+security.protocol=SSL
+ssl.keystore.location=/certs/readonly-keystore.p12
+ssl.keystore.password=mystorepassword
+ssl.ca.location=/certs/root+subca.pem
+EOF
+
+cat > adm.properties
+bootstrap.servers=kafka.bootstrap.url:9092
+security.protocol=SSL
+ssl.keystore.location=/home/wajid/prod-tefcerts/kafka-external-keystore.p12
+ssl.keystore.password=mystorepassword
+ssl.truststore.location=/home/wajid/prod-tefcerts/kafka-external-truststore.p12
+ssl.truststore.password=mystorepassword
+EOF
 -----------------------------------------------------------------------------------------------
 sudo /home/wajid/confluent-6.2.0/bin/kafka-avro-console-consumer \
 --topic topic.billing.FinanceAccounting.SubledgerEntries-MM-v1 \
