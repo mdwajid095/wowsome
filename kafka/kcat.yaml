@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kcat
+  namespace: wowsome
+spec:
+  containers:
+  - name: kcat
+    image: edenhill/kcat:1.7.1
+    command: ['sh', '-c', 'echo "Hello, Enjoy the kcat!!" && sleep infinity']
+    volumeMounts:
+    - name: cert-conf
+      mountPath: /mnt/secrets
+  volumes:
+  - name: cert-conf
+    secret:
+      secretName: cert-secret
+  imagePullSecrets:
+  - name: nexus
+  restartPolicy: Never
