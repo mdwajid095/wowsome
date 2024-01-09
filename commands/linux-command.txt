@@ -6,3 +6,7 @@ sudo chown wajid:wajid emp.json
 
 sudo chmod 775 emp.json
 
+#find a word/file
+find -name kcctl.yaml
+grep -inrw "risk" . , grep "risk" ./*.yaml, grep -rnw '/path' -e 'text'
+

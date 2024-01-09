@@ -1,4 +1,9 @@
+Docs: https://docs.confluent.io/platform/current/overview.html
+Confluent kafka CR examples: https://github.com/confluentinc/confluent-kubernetes-examples/tree/master/general/cp-version
 API: https://docs.confluent.io/operator/current/co-api.html#tag/Kafka
+Grafana dashboards: https://github.com/confluentinc/jmx-monitoring-stacks/tree/main/jmxexporter-prometheus-grafana/assets/grafana/provisioning/dashboards
+
+----------------------------------------------------------------------------------------------
 
 sudo podman run -it --rm --network=host -v /home/confluent/certs:/certs:z  edenhill/kcat:1.7.0 -b kafka.bootstrap.url:9092 -F /certs/readonly.properties -J  -t topic.charging.ccs.Usage-MM-v1 -C
 
