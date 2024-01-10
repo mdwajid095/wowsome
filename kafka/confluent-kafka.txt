@@ -7,6 +7,8 @@ Grafana dashboards: https://github.com/confluentinc/jmx-monitoring-stacks/tree/m
 
 sudo podman run -it --rm --network=host -v /home/confluent/certs:/certs:z  edenhill/kcat:1.7.0 -b kafka.bootstrap.url:9092 -F /certs/readonly.properties -J  -t topic.charging.ccs.Usage-MM-v1 -C
 
+kafka-topics --bootstrap-server kafka.kind-dev.svc.cluster.local:9071 --list
+
 cat > readonly.properties for kcat
 bootstrap.servers=kafka.bootstrap.url:9092
 security.protocol=SSL
