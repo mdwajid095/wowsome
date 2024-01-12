@@ -9,6 +9,8 @@ sudo podman run -it --rm --network=host -v /home/confluent/certs:/certs:z  edenh
 
 kafka-topics --bootstrap-server kafka.kind-dev.svc.cluster.local:9071 --list
 
+kubectl confluent dashboard controlcenter -n wowsome
+
 cat > readonly.properties for kcat
 bootstrap.servers=kafka.bootstrap.url:9092
 security.protocol=SSL
@@ -26,6 +28,7 @@ ssl.truststore.location=/home/wajid/prod-tefcerts/kafka-external-truststore.p12
 ssl.truststore.password=mystorepassword
 EOF
 -----------------------------------------------------------------------------------------------
+
 sudo /home/wajid/confluent-6.2.0/bin/kafka-avro-console-consumer \
 --topic topic.billing.FinanceAccounting.SubledgerEntries-MM-v1 \
 --bootstrap-server kafka.bootstrap.url:9092 \
