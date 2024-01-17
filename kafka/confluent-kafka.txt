@@ -170,11 +170,12 @@ kafka-acls --bootstrap-server kafka-0.kafka.ns.svc.cluster.local:9071 --command-
 
 ##connectors
 
-curl -k https://localhost:8083/connectors/
+curl -k https://localhost:8083/connectors
+curl -k localhost:8083/connectors?expand=status
 curl -k -X POST -H "Content-Type: application/json" https://localhost:8083/connectors/ -d @sample.json
-curl -k -X PUT https://connect.ns.svc.cluster.local:8083/connectors/CCM-interaction-CIM-MM-Sink/tasks/0/restart
-curl -k -X PUT https://connect.ns.svc.cluster.local:8083/connectors/CCM-interaction-CIM-MM-Sink/pause
-curl -k -X PUT https://connect.ns.svc.cluster.local:8083/connectors/CCM-interaction-CIM-MM-Sink/resume
+curl -k -X POST localhost:8083/connectors/NMS-order_number-DDC-MM-Source-v1/tasks/0/restart
+curl -k -X PUT https://connect.e2e1.svc.cluster.local:8083/connectors/CCM-interaction-CIM-MM-Sink/pause
+curl -k -X PUT https://connect.e2e1.svc.cluster.local:8083/connectors/CCM-interaction-CIM-MM-Sink/resume
 curl -X DELETE -k -u test:test@123 https://10.170.142.240/connectors/sfdctecosuserdetails
 
 =====================================================
