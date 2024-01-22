@@ -191,15 +191,34 @@ done
 
 =====================================================
 
-curl -k -X GET https://schemaregistry.url/subjects/topic.payment.PaymentConfirmationNotification-MM-v1-value/versions/latest/schema
+##schemaregistry
 
+curl -k -X GET https://schemaregistry.url/subjects/topic.payment.PaymentConfirmationNotification-MM-v1-value/versions/latest/schema
 curl -k -X "PUT" -H "Accept: application/vnd.schemaregistry.v1+json" -H "Content-Type: application/vnd.schemaregistry.v1+json" -d '{"mode":"READWRITE"}' https://schemaregistry.url:443/mode/topic.om.Activation-BB-v1-value
 
 curl -k -X "POST" -H "Accept: application/vnd.schemaregistry.v1+json" -H "Content-Type: application/vnd.schemaregistry.v1+json" --data @/Users/me/schema.json  https://schemaregistry.url:443/mode/topic.om.Activation-BB-v1-value
 
 curl -k -X DELETE https://schemaregistry.url/subjects/topic.tecos.commissioning.DeActivationforDS-BB-v1-key
 curl -k -X DELETE https://schemaregistry.url/subjects/topic.tecos.commissioning.DeActivationforDS-BB-v1-key?permanent=true
+======================================================
 
+##certificates
+
+#pem to jks & p12
+keytool -keystore kafka-external-truststore.p12 -alias ca -import -file root+subca.pem
+keytool -keystore kafka-external-truststore.jks -storetype jks -alias ca -import -file root+subca.pem
+
+#list the ca
+keytool -list -keystore kafka-external-truststore.p12 -storetype pkcs12 -storepass mystorepassword
+
+#p12 to jks:
+keytool -importkeystore -srckeystore kafka-external-truststore.p12 -srcstoretype pkcs12 -srcstorepass mystorepassword -srcalias ca -destkeystore revass-keystore.jks -deststoretype jks -deststorepass mystorepassword -destalias ca
+
+#checking certificates
+sudo keytool -v -list -storetype jks -keystore kafka-internal-truststore.jks
+sudo keytool -v -list -storetype pkcs12 -keystore kafka-internal-truststore.p12
+
+=======================================================
 sudo /home/wajid/confluent-6.2.0/bin/kafka-consumer-groups --bootstrap-server kafka.e2e2.emp-test.gcp.de.pri.o2.com:9092 --group mscim-campaignintraction --topic topic.aep.CampaignInteractionMangement-MM-v1 --reset-offsets --shift-by "-100" --command-config e2e2adm.properties --execute
 
 
