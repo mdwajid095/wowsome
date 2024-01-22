@@ -205,7 +205,7 @@ curl -k -X DELETE https://schemaregistry.url/subjects/topic.tecos.commissioning.
 ##certificates
 
 #pem to jks & p12
-keytool -keystore kafka-external-truststore.p12 -alias ca -import -file root+subca.pem
+keytool -keystore kafka-external-truststore.p12 -alias ca -import -file root+subca.pem -storepass mystorepassword
 keytool -keystore kafka-external-truststore.jks -storetype jks -alias ca -import -file root+subca.pem
 
 #list the ca
@@ -215,7 +215,7 @@ keytool -list -keystore kafka-external-truststore.p12 -storetype pkcs12 -storepa
 keytool -importkeystore -srckeystore kafka-external-truststore.p12 -srcstoretype pkcs12 -srcstorepass mystorepassword -srcalias ca -destkeystore revass-keystore.jks -deststoretype jks -deststorepass mystorepassword -destalias ca
 
 #checking certificates
-sudo keytool -v -list -storetype jks -keystore kafka-internal-truststore.jks
+sudo keytool -v -list -storetype jks -keystore kafka-internal-truststore.jks -storepass mystorepassword
 sudo keytool -v -list -storetype pkcs12 -keystore kafka-internal-truststore.p12
 
 =======================================================
