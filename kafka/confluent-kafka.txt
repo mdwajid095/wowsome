@@ -106,6 +106,9 @@ sudo /home/wajid/confluent-6.2.0/bin/kafka-topics --bootstrap-server kafka.boots
 #delete-topic
 sudo /home/wajid/confluent-6.2.0/bin/kafka-topics --bootstrap-server kafka.bootstrap.url:9092 --delete --topic topic.com.ProductOrderStateChange-mm-v1 --command-config adm.properties
 
+#delete-topic-with-prefix ['.' before '*' is must]
+sudo /home/wajid/confluent-6.2.0/bin/kafka-topics --bootstrap-server kafka.emp.gcp.de.pri.o2.com:9092 --delete --topic tef.de.com.* --command-config adm.properties
+
 #list-topics
 sudo /home/wajid/confluent-6.2.0/bin/kafka-topics --bootstrap-server kafka.bootstrap.url:9092 --list --command-config adm.properties
 
@@ -176,7 +179,7 @@ curl -k -X POST -H "Content-Type: application/json" https://localhost:8083/conne
 curl -k -X POST localhost:8083/connectors/NMS-order_number-DDC-MM-Source-v1/tasks/0/restart
 curl -k -X PUT https://connect.e2e1.svc.cluster.local:8083/connectors/CCM-interaction-CIM-MM-Sink/pause
 curl -k -X PUT https://connect.e2e1.svc.cluster.local:8083/connectors/CCM-interaction-CIM-MM-Sink/resume
-curl -X DELETE -k -u test:test@123 https://10.170.142.240/connectors/sfdctecosuserdetails
+curl -X DELETE -k -u test:test@123 https://10.170.142.240/connectors/CCM-interaction-CIM-MM-Sink
 
 =====================================================
  
