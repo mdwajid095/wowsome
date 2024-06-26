@@ -9,6 +9,17 @@ curl --cert-type P12 --cacert root+subca.pem --cert ./ajo-apigw-keystore.p12:mys
 
 ## consume the topic
 
+1. Create a consumer instance:
+curl --cert-type P12 --cacert root+subca.pem --cert ./ajo-apigw-keystore.p12:mystorepassword -X POST -H "Content-Type: application/vnd.kafka.v2+json" --data '{"name": "my_consumer_instance", "format": "avro", "auto.offset.reset": "earliest"}' "https://ajo.kafkarestproxy.ict.emp.gcp.de.pri.o2.com:443/consumers/my_consumer_group"
+
+2. Subscribe the consumer to the topic:
+curl --cert-type P12 --cacert root+subca.pem --cert ./ajo-apigw-keystore.p12:mystorepassword -X POST -H "Content-Type: application/vnd.kafka.v2+json" --data '{"topics":["topic-test-1"]}' "https://ajo.kafkarestproxy.ict.emp.gcp.de.pri.o2.com:443/consumers/my_consumer_group/instances/my_consumer_instance/subscription"
+
+3. Consume messages from the topic:
+curl --cert-type P12 --cacert root+subca.pem --cert ./ajo-apigw-keystore.p12:mystorepassword -X GET -H "Accept: application/vnd.kafka.avro.v2+json" "https://ajo.kafkarestproxy.ict.emp.gcp.de.pri.o2.com:443/consumers/my_consumer_group/instances/my_consumer_instance/records"
+
+
+
 
 
 
