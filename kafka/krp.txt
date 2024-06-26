@@ -1,0 +1,14 @@
+# list topic
+curl --cert-type P12 --cacert root+subca.pem --cert ./ajo-apigw-keystore.p12:mystorepasswor "https://ajo.kafkarestproxy.ict.emp.gcp.de.pri.o2.com:443/topics"
+
+# produce in topic with schema
+curl --cert-type P12 --cacert root+subca.pem --cert ./ajo-apigw-keystore.p12:mystorepassword -X POST -H "Content-Type: application/vnd.kafka.avro.v2+json" -H "Accept: application/vnd.kafka.v2+json, application/vnd.kafka+json, application/json" --data '{"value_schema": "{\"type\": \"record\", \"name\": \"Event\", \"fields\": [{\"name\": \"eventId\", \"type\": \"string\"}, {\"name\": \"event\", \"type\": \"string\"}]}", "records":[{"value": {"eventId":"testing","event":"hi"}}]}' "https://ajo.kafkarestproxy.ict.emp.gcp.de.pri.o2.com:443/topics/topic-test-1"
+
+# produce in topic with schemaId
+curl --cert-type P12 --cacert root+subca.pem --cert ./ajo-apigw-keystore.p12:mystorepassword -X POST -H "Content-Type: application/vnd.kafka.avro.v2+json" -H "Accept: application/vnd.kafka.v2+json, application/vnd.kafka+json, application/json" --data '{"value_schema_id":1686,"records":[{"value": {"eventId":"testing","event":"hi"}}]}' "https://ajo.kafkarestproxy.ict.emp.gcp.de.pri.o2.com:443/topics/topic-test-1"
+
+## consume the topic
+
+
+
+

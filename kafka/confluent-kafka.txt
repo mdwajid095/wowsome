@@ -107,7 +107,7 @@ sudo /home/wajid/confluent-6.2.0/bin/kafka-topics --bootstrap-server kafka.boots
 sudo /home/wajid/confluent-6.2.0/bin/kafka-topics --bootstrap-server kafka.bootstrap.url:9092 --delete --topic topic.com.ProductOrderStateChange-mm-v1 --command-config adm.properties
 
 #delete-topic-with-prefix ['.' before '*' is must]
-sudo /home/wajid/confluent-6.2.0/bin/kafka-topics --bootstrap-server kafka.emp.gcp.de.pri.o2.com:9092 --delete --topic tef.de.com.* --command-config adm.properties
+sudo /home/wajid/confluent-6.2.0/bin/kafka-topics --bootstrap-server kafka.wow.gcp.de.pri.o2.com:9092 --delete --topic tef.de.com.* --command-config adm.properties
 
 #list-topics
 sudo /home/wajid/confluent-6.2.0/bin/kafka-topics --bootstrap-server kafka.bootstrap.url:9092 --list --command-config adm.properties
@@ -119,22 +119,24 @@ sudo /home/wajid/confluent-6.2.0/bin/kafka-topics --bootstrap-server kafka.boots
 sudo /home/wajid/confluent-6.2.0/bin/kafka-acls --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --list --topic topic.ccm.EECC-Communication-v1
 
 #list-acls-by-topic-prefixed
+sudo /home/wajid/confluent-6.2.0/bin/kafka-acls --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --list --resource-pattern-type prefixed --topic topic.cim.AgreementAttributeValueChangeNotification-MM-v
+
 sudo /home/wajid/confluent-6.2.0/bin/kafka-acls --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --list |grep topic.cim.requestexport-B2B-v -4
 
 #list-acls-by-group
 sudo /home/wajid/confluent-6.2.0/bin/kafka-acls --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --list --group compax
 
 #add-write-acls
-sudo /home/wajid/confluent-6.2.0/bin/kafka-acls --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --add --allow-principal User:compax.emp.gcp.de.pri.o2.com --operation write --topic topic.com.ProductOrderStateChange-mm-v1
+sudo /home/wajid/confluent-6.2.0/bin/kafka-acls --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --add --allow-principal User:compax.wow.gcp.de.pri.o2.com --operation write --topic topic.com.ProductOrderStateChange-mm-v1
 
 #add-read-acls
-sudo /home/wajid/confluent-6.2.0/bin/kafka-acls --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --add --allow-principal User:compax.emp.gcp.de.pri.o2.com --operation read --topic topic.com.ProductOrderStateChange-mm-v1 --group compax
+sudo /home/wajid/confluent-6.2.0/bin/kafka-acls --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --add --allow-principal User:compax.wow.gcp.de.pri.o2.com --operation read --topic topic.com.ProductOrderStateChange-mm-v1 --group compax
 
 #remove-acls
-sudo /home/wajid/confluent-6.2.0/bin/kafka-acls --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --remove --allow-principal User:compax.emp.gcp.de.pri.o2.com --operation write --operation read --operation all  --topic topic.com.ProductOrderStateChange-mm-v1 --resource-pattern-type prefixed --force
+sudo /home/wajid/confluent-6.2.0/bin/kafka-acls --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --remove --allow-principal User:compax.wow.gcp.de.pri.o2.com --operation write --operation read --operation all  --topic topic.com.ProductOrderStateChange-mm-v1 --resource-pattern-type prefixed --force
 
 #add-acls-with-topic-prefix
-sudo /home/wajid/confluent-6.2.0/bin/kafka-acls --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --add --allow-principal User:compax.emp.gcp.de.pri.o2.com --operation write --operation read --operation create --operation describe --operation AlterConfigs --operation Alter --topic topic.logistics.tegscm- --topic topic.logistics.tegscm. --resource-pattern-type prefixed
+sudo /home/wajid/confluent-6.2.0/bin/kafka-acls --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --add --allow-principal User:compax.wow.gcp.de.pri.o2.com --operation write --operation read --operation create --operation describe --operation AlterConfigs --operation Alter --topic topic.logistics.tegscm- --topic topic.logistics.tegscm. --resource-pattern-type prefixed
 
 #reset-offsets
 sudo /home/wajid/confluent-6.2.0/bin/kafka-consumer-groups --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --describe --group hansenom-prod-nms-1
@@ -203,25 +205,8 @@ curl -k -X "POST" -H "Accept: application/vnd.schemaregistry.v1+json" -H "Conten
 
 curl -k -X DELETE https://schemaregistry.url/subjects/topic.tecos.commissioning.DeActivationforDS-BB-v1-key
 curl -k -X DELETE https://schemaregistry.url/subjects/topic.tecos.commissioning.DeActivationforDS-BB-v1-key?permanent=true
-======================================================
-
-##certificates
-
-#pem to jks & p12
-keytool -keystore kafka-external-truststore.p12 -alias ca -import -file root+subca.pem -storepass mystorepassword
-keytool -keystore kafka-external-truststore.jks -storetype jks -alias ca -import -file root+subca.pem
-
-#list the ca
-keytool -list -keystore kafka-external-truststore.p12 -storetype pkcs12 -storepass mystorepassword
-
-#p12 to jks:
-keytool -importkeystore -srckeystore kafka-external-truststore.p12 -srcstoretype pkcs12 -srcstorepass mystorepassword -srcalias ca -destkeystore revass-keystore.jks -deststoretype jks -deststorepass mystorepassword -destalias ca
-
-#checking certificates
-sudo keytool -v -list -storetype jks -keystore kafka-internal-truststore.jks -storepass mystorepassword
-sudo keytool -v -list -storetype pkcs12 -keystore kafka-internal-truststore.p12
 
 =======================================================
-sudo /home/wajid/confluent-6.2.0/bin/kafka-consumer-groups --bootstrap-server kafka.e2e2.emp-test.gcp.de.pri.o2.com:9092 --group mscim-campaignintraction --topic topic.aep.CampaignInteractionMangement-MM-v1 --reset-offsets --shift-by "-100" --command-config e2e2adm.properties --execute
+sudo /home/wajid/confluent-6.2.0/bin/kafka-consumer-groups --bootstrap-server kafka.e2e2.wow-test.gcp.de.pri.o2.com:9092 --group mscim-campaignintraction --topic topic.aep.CampaignInteractionMangement-MM-v1 --reset-offsets --shift-by "-100" --command-config e2e2adm.properties --execute
 
 
