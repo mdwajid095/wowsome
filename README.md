@@ -21,7 +21,7 @@ Connect: https://mdwajid095.github.io/
 
 ## kafka
 
-Adding all most used and important command for `confluent kafka`.
+Adding all most used and important command for `confluent kafka` and other important `documentation`.
 
 ## k8s
 
