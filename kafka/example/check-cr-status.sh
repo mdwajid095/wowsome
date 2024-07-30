@@ -1,4 +1,10 @@
-File=$1
+### how to use ###
+# kubectl apply -f connect-cr.yaml | tee OUT
+# sh WORKING_DIR/check-cr-status.sh connect-thales 300 OUT
+# $1= CR name, $2= max time to wait, $3= output after apply command
+##
+
+CR=$1
 TIME_OUT=$2
 OUT=`cat $3`
 CR_STATE=`echo $OUT |cut -d" " -f2`
@@ -22,11 +28,10 @@ podDeployment(){
     done        
 }
 
-for component in $(kubectl get --no-headers=true pods -l app=$File -o custom-columns=:metadata.name |sort -r)
+for component in $(kubectl get --no-headers=true pods -l app=$CR -o custom-columns=:metadata.name |sort -r)
 do
     if [ "$CR_STATE" != "unchanged" ]; then
         podDeployment
     fi
     printStatus $GREEN_ColourCode "$component deployed successfully..."
 done
-
