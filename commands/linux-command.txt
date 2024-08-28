@@ -1,5 +1,7 @@
 # some basic linux command
 
+nohup bash file.sh & - to run the command in backgroud
+
 export WORKING_DIR=/home/wajid/env
 PATH=$PATH:/home/wajid/kcctl/kcctl-1.0.0.Alpha5-linux-x86_64/bin
 

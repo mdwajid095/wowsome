@@ -1,3 +1,6 @@
+minikube start --cpus=2 --memory=4000 --profile=emp-cluster
+nohup bash file.sh & - to run the command in backgroud
+
 #set ns
 kubectl config set-context --current --namespace=wowsome
 
