@@ -1,0 +1,78 @@
+# Doc: https://helmfile.readthedocs.io/en/latest/
+
+repositories:
+  - name: wowsome-helm
+    url: {{ requiredEnv "REPO_URL" }}/{{ requiredEnv "REPO" }}
+    username: {{ requiredEnv "REPO_USER" | quote }}
+    password: {{ requiredEnv "REPO_PW" | quote }}
+
+templates:
+  _global:
+    chart: wowsome-helm/{{ .Release.Name }}
+    missingFileHandler: Warn
+    values:
+      - "environments/_all/{{ .Release.Namespace }}/{{ .Release.Name }}.gotmpl"
+      - "environments/{{ .Values.cluster }}/{{ .Release.Namespace }}/{{ .Release.Name }}.gotmpl"
+  kafka-system:
+    inherit:
+      - template: _global
+    labels:
+      component: cluster-1
+      bus-impact: medium
+    namespace: wowsome
+    values:
+      - "./environments/_default/{{ .Release.Name }}.yaml"
+
+releases:
+  - name: chart-name
+    chart: wowsome-helm/wow-chart
+    inherit:
+      - template: kafka-system
+    version: {{ .Values | get "chartVersions.wow-chart" }}
+    needs:
+      - c1-secret
+  - name: wow-configjson
+    chart: wowsome-helm/wow-dockerconfigjson
+    inherit:
+      - template: kafka-system
+    version: {{ .Values | get "chartVersions.wow-dockerconfigjson" }}
+    set:
+      - name: nameOverride
+        value: nexus
+    values:
+      - "./environments/_all/wow-dockerconfigjson.gotmpl"
+  - name: wow-gitlab-runner
+    version: {{ .Values | get "chartVersions.wow-gitlab-runner" }}
+    inherit:
+      - template: kafka-system
+    set:
+      - name: gitlab-runner.runners.tags
+        value: {{ .Values | get "sharedRunner" "emp," }}{{ .Values.secretPath }}
+      - name: gitlab-runner.runners.name
+        value: wow-{{ .Values.secretPath }}-runner
+  - name: wow-job
+    chart: wowsome-helm/wow-job
+    inherit:
+      - template: kafka-system
+    version: {{ .Values | get "chartVersions.wow-job" }}
+    set:
+      - name: scriptfile
+        file: scripts/wow-job/apply-job-config.sh
+    values:
+      - volumeMounts:
+          name: wow-acl
+          mountPath: /acls-yaml
+    installed: {{ .Values | get "featureAcl" false }}
+  - name: wow-connector
+    chart: wowsome-helm/wow-connector
+    version: {{ .Values | get "chartVersions.wow-connector" }}
+    inherit:
+      - template: confluent
+    installed: {{ .Values | get "featureConnector" false }}
+    hooks:
+      - events: ["prepare"]
+        command: "sh"
+        args: ["-c", "cp environments/{{ .Values.cluster }}/{{ .Values.secretPath }}/connectors/* components/wow-connector/connectors/"]
+      - events: ["cleanup"]
+        command: "sh"
+        args: ["-c", "rm -rf components/wow-connector/connectors/*.yaml"]
