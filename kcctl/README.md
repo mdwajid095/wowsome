@@ -14,11 +14,11 @@ docker image: https://hub.docker.com/r/mdwajid095/kcctl
 
 ## Installation
 
-To use `kcctl`, follow the instructions in the `kcctl-doc.doc` file.
+To use `kcctl`, follow the instructions in URL: (https://hub.docker.com/r/mdwajid095/kcctl)
 
 ## Usage
 
-With `kcctl`, we can do all sorts of CRUD operation with kafka connectors and replicators. For more, follow the instructions in the `kcctl-doc.doc` file. To follow the instruction from `kcctl-doc.doc`, download the raw file.
+`kcctl` is a tool like kubectl especially designed for managing kafka connect. With `kcctl`, we can do all sorts of CRUD operation with kafka connectors and replicators.
 
 ## Docker
 
