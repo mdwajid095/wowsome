@@ -34,6 +34,7 @@ keytool -keystore ${APP_NAME}-truststore.p12 \
 openssl pkcs12 -export -inkey ${APP_NAME}.key \
   -name "${APP_NAME}" -in ${APP_NAME}-tef.pem \
   -chain -CAfile root+subca.pem \
+# -certfile subca.pem \
   -passout pass:"$(< ${APP_NAME}.password)" \
   -out ${APP_NAME}-keystore.p12
 
