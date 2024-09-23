@@ -1,8 +1,11 @@
 Docs: https://docs.confluent.io/platform/current/overview.html
 Confluent CR examples: https://github.com/confluentinc/confluent-kubernetes-examples/tree/master/general/cp-version
 CFK API: https://docs.confluent.io/operator/current/co-api.html#tag/Kafka
-Connector configs: https://docs.confluent.io/cloud/current/connectors/cc-salesforce-source-cdc.html
-Grafana dashboards: https://github.com/confluentinc/jmx-monitoring-stacks/tree/main/jmxexporter-prometheus-grafana/assets/grafana/provisioning/dashboards
+Connector Configs: 
+1. https://docs.confluent.io/cloud/current/connectors/cc-salesforce-source-cdc.html
+2. https://docs.confluent.io/kafka-connectors/http/current/connector_config.html
+Cluster Linking: https://docs.confluent.io/operator/current/blueprints/cob-cluster-linking.html
+Grafana Dashboards: https://github.com/confluentinc/jmx-monitoring-stacks/tree/main/jmxexporter-prometheus-grafana/assets/grafana/provisioning/dashboards
 
 ----------------------------------------------------------------------------------------------
 
