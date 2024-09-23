@@ -153,6 +153,9 @@ sudo /home/wajid/confluent-6.2.0/bin/kafka-consumer-groups --bootstrap-server ka
 
 sudo /home/wajid/confluent-6.2.0/bin/kafka-consumer-groups --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --group raittaep --topic topic.com.ProductOrderStateChange-mm-v1 --reset-offsets --to-offset 1547 --execute
 
+#particular partition like, topic:partition
+sudo /home/wajid/confluent-6.2.0/bin/kafka-consumer-groups --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --group raittaep --topic tef.de.com.ProductOrderStateChange-mm-v1:0,1 --reset-offsets --to-offset 1547 --execute
+
 sudo /home/wajid/confluent-6.2.0/bin/kafka-consumer-groups --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --group raittaep --topic topic.com.ProductOrderStateChange-mm-v1 --reset-offsets --to-offset --to-datetime 2017-08-04T00:00:00.000 --execute
 
 
