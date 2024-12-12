@@ -1,72 +1,73 @@
 #!/bin/bash
 
 usage() {
-  local SELF
-  SELF="dockercp"
+  local SELF="dockercp"
   cat <<EOF
 USAGE:
   $SELF                    : show the user manual and version
   $SELF -h,--help          : show this message
-  $SELF -f,--file          : Will take input a file in below format, i.e json.
+  $SELF -f,--file FILE     : take input from a JSON file
 
-Example json file:
-        {
-          "destination": "europe-west3-docker.pkg.dev/PROJECT/DIR/",
-          "source": "docker.io/mdwajid095/",
-          "images": [
-            "kcctl:v1.1",
-            "curl-jq-git:v1.1",
-            "ubuntu:latest"
-          ]
-        }
+Example JSON file:
+{
+  "destination": "docker.io/nexus/",
+  "source": "docker.io/confluentinc/",
+  "images": [
+    "kcctl:v1.1",
+    "curl-jq-git:v1.1",
+    "cp-server:7.3.2"
+  ]
+}
 
 EOF
 }
 
-pusher(){
-cat $1 > inputFile
-destination=`jq -r .destination inputFile`
-source=`jq -r .source inputFile`
-imageTag=`jq -r .images[] inputFile`
+dockercp() {
+  local inputFile="$1"
+  local destination source imageTag
 
-for i in `echo $imageTag`
-do
-  pull=$source$i
-  push=$destination$i
-  echo "Pulling image $i from $source repository... "
-  sudo docker pull $pull
-  echo "Tagging image $i... "
-  sudo docker tag $pull $push
-  echo "Pushing image $i to $destination repository... "
-  sudo docker push $push
-done
-rm inputFile
+  destination=$(jq -r .destination "$inputFile")
+  source=$(jq -r .source "$inputFile")
+  imageTag=$(jq -r .images[] "$inputFile")
+
+  for i in $imageTag; do
+    local pull="$source$i"
+    local push="$destination$i"
+    echo "Pulling image $i from $source repository..."
+    sudo podman pull "$pull"
+    echo "Tagging image $i..." && sleep 3s
+    sudo podman tag "$pull" "$push"
+    echo "Pushing image $i to $destination repository..."
+    sudo podman push "$push"
+  done
 }
 
 main() {
   if [[ "$#" -eq 0 ]]; then
     echo "Version: v1.0"
-    echo "run 'dockercp -h,--help'       :for instruction manual "
+    usage
   elif [[ "$#" -eq 1 ]]; then
-    if [[ "${1}" == '-h' || "${1}" == '--help' ]]; then
-      usage
-    elif [[ "${1}" =~ ^-(.*) ]]; then
-      echo "error: unrecognized flag \"${1}\"" >&2
-      usage
-      exit 1
-    fi
+    case "$1" in
+      -h|--help)
+        usage
+        ;;
+      *)
+        echo "error: unrecognized flag \"$1\"" >&2
+        usage
+        exit 1
+        ;;
+    esac
   elif [[ "$#" -eq 2 ]]; then
-    if [[ "${2}" =~ ^-(.*) ]]; then
-      echo "error: unrecognized flag \"${2}\"" >&2
-      usage
-      exit 1
-    elif [[ "${1}" == '-f' || "${1}" == '--file' ]]; then
-      pusher $2
-    else
-     echo "error: unrecognized flag \"${1}\"" >&2
-     usage
-     exit 1
-    fi
+    case "$1" in
+      -f|--file)
+        dockercp "$2"
+        ;;
+      *)
+        echo "error: unrecognized flag \"$1\"" >&2
+        usage
+        exit 1
+        ;;
+    esac
   else
     echo "error: too many flags" >&2
     usage
