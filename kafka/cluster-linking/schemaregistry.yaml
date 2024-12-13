@@ -1,0 +1,43 @@
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: SchemaRegistry
+metadata:
+  name: schemaregistry
+  namespace: wowsome
+spec:
+  oneReplicaPerNode: true
+  replicas: 2
+  image:
+    application: docker.io/confluentinc/cp-schema-registry:7.6.1
+    init: docker.io/confluentinc/confluent-init-container:2.8.2
+    pullSecretRef:
+      - nexus
+  license:
+    secretRef: confluent-license
+  injectAnnotations:
+    networking.gke.io/load-balancer-type: "Internal"
+    networking.gke.io/internal-load-balancer-allow-global-access: "true"
+  tls:
+    secretRef: tls-schemaregistry
+  externalAccess:
+     type: loadBalancer
+     loadBalancer:
+         prefix: schemaregistry-cl
+         domain: emp.gcp.de.pri.o2.com
+  configOverrides:
+    log4j:
+     - log4j.rootLogger=WARN, stdout
+     - log4j.appender.stdout.layout.ConversionPattern={"level":"%p","timestamp":"%d{ISO8601}","thread":"%t","file":"%F","line":"%L","message":"%m","stacktrace":"%throwable{full}"}%n
+    server:
+     - schema.compatibility.level=forward
+  dependencies:
+    kafka:
+      bootstrapEndpoint: kafka.wowsome.svc.cluster.local:9071
+      authentication:
+        type: mtls
+      tls:
+        enabled: true
+        secretRef: tls-kafka-internal
+  passwordEncoder:
+    secretRef: password-encoder-secret
+  enableSchemaExporter: true
