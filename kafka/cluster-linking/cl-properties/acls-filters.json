@@ -1,0 +1,14 @@
+{
+   "aclFilters": [
+     {
+       "resourceFilter": {
+         "resourceType": "any",
+         "patternType": "any"
+       },
+       "accessFilter": {
+         "operation": "any",
+         "permissionType": "any"
+       }
+     }
+   ]
+ }

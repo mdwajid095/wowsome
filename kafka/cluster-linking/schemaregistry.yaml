@@ -3,7 +3,7 @@ apiVersion: platform.confluent.io/v1beta1
 kind: SchemaRegistry
 metadata:
   name: schemaregistry
-  namespace: wowsome
+  namespace: cl-ffm-prod
 spec:
   oneReplicaPerNode: true
   replicas: 2
@@ -32,7 +32,7 @@ spec:
      - schema.compatibility.level=forward
   dependencies:
     kafka:
-      bootstrapEndpoint: kafka.wowsome.svc.cluster.local:9071
+      bootstrapEndpoint: kafka.cl-ffm-prod.svc.cluster.local:9071
       authentication:
         type: mtls
       tls:

@@ -1,0 +1,20 @@
+apiVersion: platform.confluent.io/v1beta1
+kind: SchemaExporter
+metadata:
+  name: schema-exporter
+  namespace: ffm-prod
+spec:
+  sourceCluster:
+    schemaRegistryClusterRef:
+      name: schemaregistry-thales
+      namespace: ffm-prod
+  destinationCluster:
+    schemaRegistryRest:
+      authentication:
+        type: mtls
+      endpoint: https://10.190.129.205:443
+      tls:
+       secretRef: tls-schemaregistry
+  contextType: NONE
+  contextName: "."
+  subjects: ["*"]

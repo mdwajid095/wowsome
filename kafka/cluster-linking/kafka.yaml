@@ -1,0 +1,75 @@
+apiVersion: platform.confluent.io/v1beta1
+kind: Kafka
+metadata:
+  name: kafka
+  namespace: cl-ffm-prod
+spec:
+  configOverrides:
+    log4j:
+    - log4j.appender.stdout.layout.ConversionPattern={"level":"%p","timestamp":"%d{ISO8601}","thread":"%t","file":"%F","line":"%L","message":"%m","stacktrace":"%throwable{full}"}%n
+    - log4j.logger.kafka.authorizer.logger=INFO, stdout
+    - log4j.logger.kafka.coordinator.group=INFO, stdout
+    - log4j.logger.kafka.network.RequestChannel$=INFO, stdout
+    - log4j.logger.kafka.request.logger=INFO, stdout
+    - log4j.logger.org.apache.zookeeper=ERROR
+    - log4j.logger.org.I0Itec.zkclient.ZkClient=ERROR
+    - log4j.rootLogger=ERROR, stdout
+    server:
+    - allow.everyone.if.no.acl.found=false
+    - authorizer.class.name=kafka.security.authorizer.AclAuthorizer
+    - confluent.balancer.enable=true
+    - confluent.balancer.heal.uneven.load.trigger=ANY_UNEVEN_LOAD
+    - confluent.consumer.lag.emitter.enabled=true
+    - confluent.consumer.lag.emitter.interval.ms=30000
+    - confluent.schema.registry.url=https://schemaregistry.ffm-prod.svc.cluster.local:8081
+    - confluent.ssl.truststore.location=/mnt/sslcerts/tls-kafka-internal/truststore.p12
+    - confluent.ssl.truststore.password=${file:/mnt/sslcerts/jksPassword.txt:jksPassword}
+    - confluent.ssl.keystore.location=/mnt/sslcerts/tls-kafka-internal/keystore.p12
+    - confluent.ssl.keystore.password=${file:/mnt/sslcerts/jksPassword.txt:jksPassword}
+    - controlled.shutdown.max.retries=20
+    - inter.broker.protocol.version=3.6
+    - kafka.rest.client.security.protocol=SSL
+    - kafka.rest.client.ssl.key.password=${file:/mnt/sslcerts/jksPassword.txt:jksPassword}
+    - kafka.rest.client.ssl.keystore.location=/mnt/sslcerts/keystore.p12
+    - kafka.rest.client.ssl.keystore.password=${file:/mnt/sslcerts/jksPassword.txt:jksPassword}
+    - kafka.rest.client.ssl.truststore.location=/mnt/sslcerts/truststore.p12
+    - kafka.rest.client.ssl.truststore.password=${file:/mnt/sslcerts/jksPassword.txt:jksPassword}
+    - num.recovery.threads.per.data.dir=6
+    - super.users=User:kafka.ffm-prod.emp.gcp.de.pri.o2.com;User:kafka.ffm-prod.svc.cluster.local;User:ANONYMOUS
+    - zookeeper.set.acl=true
+    - confluent.http.server.listeners=http://kafka.cl-ffm-prod.svc.cluster.local:8090
+  dataVolumeCapacity: 4500Gi
+  dependencies:
+    zookeeper:
+      authentication:
+        jaasConfig:
+          secretRef: credential
+        type: digest
+      endpoint: zookeeper.cl-ffm-prod.svc.cluster.local:2182
+      tls:
+        enabled: true
+  image:
+    application: docker.io/confluentinc/cp-server:7.6.1
+    init: docker.io/confluentinc/confluent-init-container:2.8.2
+  injectAnnotations:
+    networking.gke.io/internal-load-balancer-allow-global-access: "true"
+    networking.gke.io/load-balancer-type: Internal
+  license:
+    secretRef: confluent-license
+  listeners:
+    internal:
+      authentication:
+        principalMappingRules:
+        - RULE:.*CN[\s]?=([a-zA-Z0-9.\-]*)?.*/$1/
+        type: mtls
+      tls:
+        enabled: true
+        secretRef: tls-kafka-internal
+  oneReplicaPerNode: true
+  replicas: 9
+  storageClass:
+    name: std-storage-dr-thales-rwo
+  tls:
+    secretRef: tls-kafka-internal
+  passwordEncoder:
+    secretRef: password-encoder-secret

@@ -16,8 +16,8 @@ This guide provides step-by-step instructions for setting up and configuring a K
 4. **Create Kafka Internal Certificates**
    - Run the script `create-kafka-secret.sh` to create Kafka internal certificates.
 
-5. **Create Other Required Certificates**
-   - Generate additional certificates such as `password-encoder-secret` and credentials.
+5. **Create Other Required secrets**
+   - Generate additional secrets such as `password-encoder-secret`, `credentials` and `tls-schemaregistry`.
 
 6. **Deploy Services**
    - Deploy Zookeeper, Kafka, and Schema Registry.
