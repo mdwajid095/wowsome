@@ -1,0 +1,2 @@
+hvac==2.3.0
+cryptography==44.0.2
