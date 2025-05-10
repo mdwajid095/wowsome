@@ -1,13 +1,18 @@
 minikube start --cpus=2 --memory=4000 --profile=emp-cluster
 nohup bash file.sh & - to run the command in backgroud
 
-#set ns
+# k8s cluster setup
+gcloud config set project wow-gcp-prod-01
+gcloud auth login
+gcloud container clusters get-credentials gcp-cluster-wow-prod-gke --region europe-west3
+
+# set ns
 kubectl config set-context --current --namespace=wowsome
 
-#to delete the namespace if it's in terminating state
+# to delete the namespace if it's in terminating state
 NS=`kubectl get ns |grep Terminating | awk 'NR==1 {print $1}'` && kubectl get namespace "$NS" -o json | tr -d "\n" | sed "s/\"finalizers\": \[[^]]\+\]/\"finalizers\": []/" | kubectl replace --raw /api/v1/namespaces/$NS/finalize -f -
 
-#create pod
+# create pod
 kubectl run -i -t kcctl --rm --image=mdwajid095/kcctl:v1.2 --image-pull-policy="IfNotPresent" --overrides='{ "spec": { "template": { "spec": { "imagePullSecrets": [{"name": "nexus"}] } } } }'
 
 
