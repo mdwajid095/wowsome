@@ -9,6 +9,7 @@ Connect: https://mdwajid095.github.io/
 - kafka
 - k8s
 - kube-plugins
+- certs
 
 
 ## kind-cluster
@@ -22,6 +23,10 @@ Connect: https://mdwajid095.github.io/
 ## kafka
 
 Adding all most used and important command for `confluent kafka` and other important `documentation`.
+
+## certs
+
+Storing all important command or operation related to certificates management like csr to keystore.p12 generation and uploading and downloading to vault. Also python script to check the expiry of p12 certs.
 
 ## k8s
 
