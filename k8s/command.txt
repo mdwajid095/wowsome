@@ -4,7 +4,9 @@ nohup bash file.sh & - to run the command in backgroud
 # k8s cluster setup
 gcloud config set project wow-gcp-prod-01
 gcloud auth login
-gcloud container clusters get-credentials gcp-cluster-wow-prod-gke --region europe-west3
+gcloud container clusters get-credentials gcp-wow-poc-gke --region europe-west3
+# helm setup
+gcloud container clusters get-credentials gcp-wow-poc-gke --zone europe-west3 --project wow-gcp-dev
 
 # set ns
 kubectl config set-context --current --namespace=wowsome
