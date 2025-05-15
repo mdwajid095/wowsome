@@ -44,10 +44,10 @@ distinguished_name = req_distinguished_name
 req_extensions = v3_req
 prompt = no
 [req_distinguished_name]
-C = DE
-ST = Bavaria
-L = Munich
-O = Telefonica Germany GmbH und Co. OHG
+C = IN
+ST = West Bengal
+L = Kolkata
+O = Wow India Co. LTD
 OU = ST
 CN = $TENANT_CN
 [v3_req]
