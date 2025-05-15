@@ -7,19 +7,13 @@ This guide provides step-by-step instructions for setting up and configuring a K
 1. **Write Configuration File**
    - Ensure the configuration file includes the correct DNS settings.
 
-2. **Generate CSR and Key**
-   - Use the script `generate-key-csr.sh` to generate the Certificate Signing Request (CSR) and key.
-
-3. **Generate PEM**
-   - Use the CSR to generate the PEM file.
-
-4. **Create Kafka Internal Certificates**
+2. **Create Kafka Internal Certificates**
    - Run the script `create-kafka-secret.sh` to create Kafka internal certificates.
 
-5. **Create Other Required secrets**
-   - Generate additional secrets such as `password-encoder-secret`, `credentials` and `tls-schemaregistry`.
+3. **Create Other Required secrets**
+   - Generate additional secrets such as `password-encoder-secret`and `credentials` etc.
 
-6. **Deploy Services**
+4. **Deploy Services**
    - Deploy Zookeeper, Kafka, and Schema Registry.
 
 ## Important Notes
