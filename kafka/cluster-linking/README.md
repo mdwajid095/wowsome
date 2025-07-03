@@ -45,7 +45,7 @@ Cluster Linking Doc: https://docs.confluent.io/operator/current/blueprints/cob-c
 Note: Commnad need to run inside destination kafka cluster pod
 
 #1 create kafka-cluster-links
-Note: destination cluster should not have any existing topic.
+## Note: destination cluster should not have any existing topic.
 kafka-cluster-links --bootstrap-server kafka.cl-ffm-prod.svc.cluster.local:9071 --create --link sample --command-config /tmp/destination.properties --config-file /tmp/source.properties  --consumer-group-filters-json-file /tmp/consumer.offset.sync.json --topic-filters-json-file /tmp/topic-filters.json --acl-filters-json-file /tmp/acls-filters.json
  
 #2 list/describe the kafka-cluster-links
@@ -67,9 +67,9 @@ kafka-mirrors --failover --bootstrap-server kafka.cl-ffm-prod.svc.cluster.local:
 # use script mirror2normal-topic.sh
  
 #7 delete kafka-cluster-links
-Note: before deleting, we have to mirror topic to normal using above method
+## Note: before deleting, we have to mirror topic to normal using above method
 kafka-cluster-links --delete --link sample --bootstrap-server kafka.cl-ffm-prod.svc.cluster.local:9071 --command-config /tmp/destination.properties
-Note: if not deleting, try with --force
+## Note: if not deleting, try with --force
  ```
 ---
 
