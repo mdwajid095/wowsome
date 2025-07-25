@@ -153,22 +153,24 @@ sudo /home/wajid/confluent-6.2.0/bin/kafka-consumer-groups --bootstrap-server ka
 
 sudo /home/wajid/confluent-6.2.0/bin/kafka-consumer-groups --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --group raittaep --topic topic.com.ProductOrderStateChange-mm-v1 --reset-offsets --to-offset 1547 --execute
 
+sudo /home/wajid/confluent-6.2.0/bin/kafka-consumer-groups --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --group raittaep --topic topic.com.ProductOrderStateChange-mm-v1 --reset-offsets --to-datetime 2017-08-04T00:00:00.000 --execute
+
 #particular partition like, topic:partition
 sudo /home/wajid/confluent-6.2.0/bin/kafka-consumer-groups --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --group raittaep --topic tef.de.com.ProductOrderStateChange-mm-v1:0,1 --reset-offsets --to-offset 1547 --execute
 
-sudo /home/wajid/confluent-6.2.0/bin/kafka-consumer-groups --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --group raittaep --topic topic.com.ProductOrderStateChange-mm-v1 --reset-offsets --to-offset --to-datetime 2017-08-04T00:00:00.000 --execute
 
-
-#clean-up-a-topic
+# clean-up-a-topic
 7d= 604800000 ms
 sudo /home/wajid/confluent-6.2.0/bin/kafka-configs --alter --bootstrap-server kafka.bootstrap.url:9092 --entity-type topics --entity-name topic.epc.deltabuilder.PublishPSEvents-MM-v1 --add-config retention.ms=0 --command-config adm.properties
 
-#partition-set
+# partition-set
 sudo /home/wajid/confluent-6.2.0/bin/kafka-topics --bootstrap-server kafka.bootstrap.url:9092  --alter --topic topic.com.ProductOrderStateChange-mm-v1 --partitions 10 --command-config adm.properties
 
-#re-assign-partitions
+# re-assign-partitions
 sudo /home/confluent/confluent-7.1.1/bin/kafka-reassign-partitions --bootstrap-server kafka.bootstrap.url:9092 --command-config adm.properties --reassignment-json-file /tmp/name.json --execute --broker-list 0,1,2
 
+# kafka-rebalance-cluster
+sudo /home/confluent/confluent-7.1.1/bin/kafka-rebalance-cluster --bootstrap-server kafka.bootstrap.url:90921 -command-config adm.properties --describe
 
 ====================================================
 
@@ -179,8 +181,7 @@ kafka-acls --bootstrap-server kafka-0.kafka.ns.svc.cluster.local:9071 --command-
 kafka-acls --bootstrap-server kafka-0.kafka.ns.svc.cluster.local:9071 --command-config /tmp/client.properties --add --allow-principal User:revass --operation read --operation write --operation create --operation describe --operation AlterConfigs --operation Alter --topic revenueassurance. --topic revenueassurance- --resource-pattern-type prefixed
 
 =====================================================
-
-##connectors
+## connectors
 
 curl -k https://localhost:8083/connectors
 curl -k localhost:8083/connectors?expand=status
@@ -202,8 +203,7 @@ echo "$i"
 done
 
 =====================================================
-
-##schemaregistry
+## schemaregistry
 
 curl -k -X GET https://schemaregistry.url/subjects/topic.payment.PaymentConfirmationNotification-MM-v1-value/versions/latest/schema
 curl -k -X "PUT" -H "Accept: application/vnd.schemaregistry.v1+json" -H "Content-Type: application/vnd.schemaregistry.v1+json" -d '{"mode":"READWRITE"}' https://schemaregistry.url:443/mode/topic.om.Activation-BB-v1-value
