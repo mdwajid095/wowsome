@@ -20,7 +20,7 @@ openssl req -new -key server-private-key.pem -out server-certificate.csr
 3. Sign the CSR using the root CA
 openssl x509 -req -in server-certificate.csr -CA root-ca.pem -CAkey root-ca-key.pem -CAcreateserial -out server-client-certificate.crt -sha256
 
-===================================================================================
+# ===================================================================================
 # create keystore and truststore in .p12
 
 export APP_NAME=wow
@@ -39,15 +39,16 @@ openssl pkcs12 -export -inkey ${APP_NAME}.key \
   -out ${APP_NAME}-keystore.p12
 
 # .p12 to .jks
-
 keytool -importkeystore -srckeystore ${APP_NAME}-keystore.p12 -srcstoretype pkcs12 -srcstorepass "$(< ${APP_NAME}.password)" -srcalias ${APP_NAME} -destkeystore ${APP_NAME}-keystore.jks -deststoretype jks -deststorepass "$(< ${APP_NAME}.password)" -destalias ${APP_NAME}
  
 keytool -keystore ${APP_NAME}-truststore.jks -storetype jks -storepass "$(< ${APP_NAME}.password)" -alias ca -import -file root+subca.pem
-====================================================================================
-
-# list the ca
-keytool -list -keystore kafka-external-truststore.p12 -storetype pkcs12 -storepass mystorepassword
-
+# ====================================================================================
+# .p12 to .pem
+openssl pkcs12 -in keystore.p12 -nocerts -nodes -out cert.key -password pass:mystorepassword
+openssl pkcs12 -in keystore.p12 -nokeys -out cert.pem -password pass:mystorepassword
+# ====================================================================================
 # checking certificates
-sudo keytool -v -list -storetype jks -keystore kafka-internal-truststore.jks -storepass mystorepassword
-sudo keytool -v -list -storetype pkcs12 -keystore kafka-internal-truststore.p12
+sudo keytool -v -list -storetype jks -keystore keystore.jks -storepass mystorepassword
+sudo keytool -v -list -storetype pkcs12 -keystore keystore.p12
+
+openssl pkcs12 -info -in keystore.p12 -password pass:mystorepassword
