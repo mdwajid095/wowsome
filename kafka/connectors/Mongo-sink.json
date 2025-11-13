@@ -1,0 +1,27 @@
+{
+    "name": "pqt-mongosink-ProductOrderStateChange-mm",
+    "config": {
+        "connector.class": "com.mongodb.kafka.connect.MongoSinkConnector",
+        "input.data.format": "AVRO",
+        "topics": "tef.de.com.ProductOrderStateChange-mm-v1",
+        "tasks.max": "1",
+        "key.converter": "io.confluent.connect.avro.AvroConverter",
+        "key.converter.schema.registry.url": https://schemaregistry.emp.gcp.de.pri.o2.com,
+        "value.converter": "io.confluent.connect.avro.AvroConverter",
+        "value.converter.schema.registry.url": https://schemaregistry.emp.gcp.de.pri.o2.com,
+        "key.converter.schema.registry.ssl.truststore.location": "/opt/confluent/ssl/emp_prod/pqt-truststore.p12",
+        "key.converter.schema.registry.ssl.truststore.password": "xxxxxxxxxxxxx",
+        "key.converter.schema.registry.ssl.keystore.location": "/opt/confluent/ssl/emp_prod/pqt-keystore.p12",
+        "key.converter.schema.registry.ssl.keystore.password": "xxxxxxxxxxxxx",
+        "value.converter.schema.registry.ssl.truststore.location": "/opt/confluent/ssl/emp_prod/pqt-truststore.p12",
+        "value.converter.schema.registry.ssl.truststore.password": "xxxxxxxxxxxxx",
+        "value.converter.schema.registry.ssl.keystore.location": "/opt/confluent/ssl/emp_prod/pqt-keystore.p12",
+        "value.converter.schema.registry.ssl.keystore.password": "xxxxxxxxxxxxx",
+        "connection.uri": "${file:/home/confluent/kafka-secrets/connect-secrets.properties:mongodb-connector-url}",
+        "database": "kafkadb",
+        "collection": "tef_de_ProductOrderStateChange_mm",
+        "document.id.strategy": "com.mongodb.kafka.connect.sink.processor.id.strategy.BsonOidStrategy",
+        "post.processor.chain": "com.mongodb.kafka.connect.sink.processor.DocumentIdAdder",
+        "mongo.errors.log.enable": "true"
+    }
+}
