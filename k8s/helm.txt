@@ -1,0 +1,9 @@
+# https://helm.sh/docs
+helm install chart-name .
+helm install chart-name <chart-path-or-repo> -f values.yaml
+helm upgrade --install chart-name .
+helm history chart-name
+helm status chart-name
+helm rollback chart-name 134 --force # add force if required
+helm diff revision chart-name 134 136
+helm uninstall chart-name --keep-history
