@@ -7,12 +7,12 @@ Connector Configs:
 Cluster Linking: https://docs.confluent.io/operator/current/blueprints/cob-cluster-linking.html
 Grafana Dashboards: https://github.com/confluentinc/jmx-monitoring-stacks/tree/main/jmxexporter-prometheus-grafana/assets/grafana/provisioning/dashboards
 
+curl -O https://packages.confluent.io/bundle/cfk/confluent-for-kubernetes-3.1.0.tar.gz
+curl -O https://packages.confluent.io/archive/7.9/confluent-7.9.2.tar.gz
 ----------------------------------------------------------------------------------------------
 kubectl apply -f ./crds/ --server-side=true
 
 sudo podman run -it --rm --network=host -v /home/confluent/certs:/certs:z  edenhill/kcat:1.7.0 -b kafka.bootstrap.url:9092 -F /certs/readonly.properties -J  -t topic.charging.ccs.Usage-MM-v1 -C
-
-kafka-topics --bootstrap-server kafka.kind-dev.svc.cluster.local:9071 --list
 
 kubectl confluent dashboard controlcenter -n wowsome
 
@@ -103,8 +103,6 @@ sudo /home/wajid/confluent-6.2.0/bin/kafka-consumer-perf-test \
   --consumer.config adm.properties \
   --show-detailed-stats
   
-
-
 #create-topic
 sudo /home/wajid/confluent-6.2.0/bin/kafka-topics --bootstrap-server kafka.bootstrap.url:9092 --create --topic topic.com.ProductOrderStateChange-mm-v1 --partitions 3 --replication-factor 3 --command-config adm.properties
 
