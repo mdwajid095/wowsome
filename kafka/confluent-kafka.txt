@@ -11,6 +11,7 @@ curl -O https://packages.confluent.io/bundle/cfk/confluent-for-kubernetes-3.1.0.
 curl -O https://packages.confluent.io/archive/7.9/confluent-7.9.2.tar.gz
 ----------------------------------------------------------------------------------------------
 kubectl apply -f ./crds/ --server-side=true
+kubectl-confluent support-bundle report --namespace confluent
 
 sudo podman run -it --rm --network=host -v /home/confluent/certs:/certs:z  edenhill/kcat:1.7.0 -b kafka.bootstrap.url:9092 -F /certs/readonly.properties -J  -t topic.charging.ccs.Usage-MM-v1 -C
 
