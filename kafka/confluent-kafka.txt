@@ -191,6 +191,9 @@ curl -k -X PUT https://connect.e2e1.svc.cluster.local:8083/connectors/CCM-intera
 curl -k -X PUT https://connect.e2e1.svc.cluster.local:8083/connectors/CCM-interaction-CIM-MM-Sink/resume
 curl -X DELETE -k -u test:test@123 https://10.170.142.240/connectors/CCM-interaction-CIM-MM-Sink
 
+curl -k -X PUT -H "Content-Type:application/json" https://localhost:8083/admin/loggers/io.confluent.salesforce.SalesforceCdcSourceConnector -d '{"level": "TRACE"}'
+curl -k https://localhost:8083/admin/loggers/io.confluent.salesforce   # works with package not with class name
+curl -k https://localhost:8083/admin/loggers
 =====================================================
  
 #!/bin/bash
