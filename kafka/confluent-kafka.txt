@@ -6,6 +6,8 @@ Connector Configs:
 2. https://docs.confluent.io/kafka-connectors/http/current/connector_config.html
 Cluster Linking: https://docs.confluent.io/operator/current/blueprints/cob-cluster-linking.html
 Grafana Dashboards: https://github.com/confluentinc/jmx-monitoring-stacks/tree/main/jmxexporter-prometheus-grafana/assets/grafana/provisioning/dashboards
+Connect plugins marketplace: https://www.confluent.io/hub/
+Migration resource: https://github.com/Schm1tz1/cp-migration-playbook
 
 curl -O https://packages.confluent.io/bundle/cfk/confluent-for-kubernetes-3.1.0.tar.gz
 curl -O https://packages.confluent.io/archive/7.9/confluent-7.9.2.tar.gz
