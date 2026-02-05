@@ -196,6 +196,10 @@ curl -X DELETE -k -u test:test@123 https://10.170.142.240/connectors/CCM-interac
 curl -k -X PUT -H "Content-Type:application/json" https://localhost:8083/admin/loggers/io.confluent.salesforce.SalesforceCdcSourceConnector -d '{"level": "TRACE"}'
 curl -k https://localhost:8083/admin/loggers/io.confluent.salesforce   # works with package not with class name
 curl -k https://localhost:8083/admin/loggers
+
+curl -vvv -u deployment_emp:deployment_emp --upload-file debezium-connector-oracle-3.0.8.Final-plugin.zip https://dot-portal.de.pri.o2.com/nexus/repository/raw-private_hosted/EMP/debezium-connector-oracle-3.0.8.Final-plugin.zip
+
+curl -vvv -u deployment_emp:deployment_emp -X DELETE https://dot-portal.de.pri.o2.com/nexus/repository/raw-private_hosted/EMP/debezium-connector-oracle-3.0.8.Final-plugin.zip
 =====================================================
  
 #!/bin/bash
