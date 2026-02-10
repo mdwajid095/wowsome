@@ -1,0 +1,72 @@
+apiVersion: platform.confluent.io/v1beta1
+kind: Connector
+metadata:
+  labels:
+    app.kubernetes.io/name: replicator
+    app.kubernetes.io/managed-by: yaml
+  name: dlp-eecc-aep-replicator-v1
+spec:
+  class: io.confluent.connect.replicator.ReplicatorSourceConnector
+  configs:
+    connector.class: io.confluent.connect.replicator.ReplicatorSourceConnector
+    dest.kafka.bootstrap.servers: kafka-thales.ffm-prod.svc.cluster.local:9071
+    dest.kafka.security.protocol: SSL
+    dest.kafka.ssl.key.password: ${file:/mnt/secrets/replicator-creds/dlp-replicator.passphrase:passphrase}
+    dest.kafka.ssl.keystore.location: /mnt/secrets/replicator-creds/dlp-replicator-keystore.p12
+    dest.kafka.ssl.keystore.password: ${file:/mnt/secrets/replicator-creds/dlp-replicator.passphrase:passphrase}
+    dest.kafka.ssl.truststore.location: /mnt/sslcerts/truststore.p12
+    dest.kafka.ssl.truststore.password: ${file:/mnt/sslcerts/jksPassword.txt:jksPassword}
+    kafka.topic.lowercase: "false"
+    key.converter: io.confluent.connect.avro.AvroConverter
+    key.converter.schema.registry.ssl.key.password: ${file:/mnt/secrets/replicator-creds/dlp-replicator.passphrase:passphrase}
+    key.converter.schema.registry.ssl.keystore.location: /mnt/secrets/replicator-creds/dlp-replicator-keystore.p12
+    key.converter.schema.registry.ssl.keystore.password: ${file:/mnt/secrets/replicator-creds/dlp-replicator.passphrase:passphrase}
+    key.converter.schema.registry.ssl.truststore.location: /mnt/sslcerts/truststore.p12
+    key.converter.schema.registry.ssl.truststore.password: ${file:/mnt/sslcerts/jksPassword.txt:jksPassword}
+    key.converter.schema.registry.url: https://schemaregistry-thales.ffm-prod.svc.cluster.local:8081
+    offset.start: consumer
+    producer.override.ssl.key.password: ${file:/mnt/secrets/replicator-creds/dlp-replicator.passphrase:passphrase}
+    producer.override.ssl.keystore.location: /mnt/secrets/replicator-creds/dlp-replicator-keystore.p12
+    producer.override.ssl.keystore.password: ${file:/mnt/secrets/replicator-creds/dlp-replicator.passphrase:passphrase}
+    producer.override.ssl.keystore.type: PKCS12
+    producer.override.ssl.truststore.location: /mnt/sslcerts/truststore.p12
+    producer.override.ssl.truststore.password: ${file:/mnt/sslcerts/jksPassword.txt:jksPassword}
+    producer.override.ssl.truststore.type: PKCS12
+    src.consumer.group.id: dlp-eecc-prod
+    src.kafka.bootstrap.servers: ${file:/mnt/secrets/replicator-creds/dlpp-emp.properties:DLP_BOOTSTRAP_URL}
+    src.kafka.sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule
+      required username='${file:/mnt/secrets/replicator-creds/dlpp-emp.properties:USERNAME}'
+      password='${file:/mnt/secrets/replicator-creds/dlpp-emp.properties:PASSWORD}';
+    src.kafka.sasl.mechanism: PLAIN
+    src.kafka.security.protocol: SASL_SSL
+    src.kafka.ssl.truststore.location: /usr/lib/jvm/temurin-17-jdk/lib/security/cacerts
+    src.kafka.ssl.truststore.password: ${file:/mnt/secrets/replicator-creds/dlpp-emp.properties:DLP_SSL_PASSWORD}
+    src.key.converter: org.apache.kafka.connect.storage.StringConverter
+    src.key.converter.schema.registry.ssl.truststore.location: /usr/lib/jvm/temurin-17-jdk/lib/security/cacerts
+    src.key.converter.schema.registry.ssl.truststore.password: ${file:/mnt/secrets/replicator-creds/dlpp-emp.properties:DLP_SSL_PASSWORD}
+    src.key.converter.schema.registry.url: ${file:/mnt/secrets/replicator-creds/dlpp-emp.properties:DLP_SCHEMA_REGISTRY_URL}
+    src.value.converter: io.confluent.connect.avro.AvroConverter
+    src.value.converter.schema.registry.ssl.truststore.location: /usr/lib/jvm/temurin-17-jdk/lib/security/cacerts
+    src.value.converter.schema.registry.ssl.truststore.password: ${file:/mnt/secrets/replicator-creds/dlpp-emp.properties:DLP_SSL_PASSWORD}
+    src.value.converter.schema.registry.url: ${file:/mnt/secrets/replicator-creds/dlpp-emp.properties:DLP_SCHEMA_REGISTRY_URL}
+    tasks.max: "1"
+    topic.whitelist: tef.de.cip.export.adobe.eecc-offers.v1
+    value.converter: io.confluent.connect.avro.AvroConverter
+    value.converter.schema.registry.ssl.key.password: ${file:/mnt/secrets/replicator-creds/dlp-replicator.passphrase:passphrase}
+    value.converter.schema.registry.ssl.keystore.location: /mnt/secrets/replicator-creds/dlp-replicator-keystore.p12
+    value.converter.schema.registry.ssl.keystore.password: ${file:/mnt/secrets/replicator-creds/dlp-replicator.passphrase:passphrase}
+    value.converter.schema.registry.ssl.truststore.location: /mnt/sslcerts/truststore.p12
+    value.converter.schema.registry.ssl.truststore.password: ${file:/mnt/sslcerts/jksPassword.txt:jksPassword}
+    value.converter.schema.registry.url: https://schemaregistry-thales.ffm-prod.svc.cluster.local:8081
+  connectClusterRef:
+    name: replicator-thales
+    namespace: ffm-prod
+  connectRest:
+    authentication:
+      basic:
+        secretRef: connect-credential
+      type: basic
+  name: DLP-eecc-AEP-replicator-v1
+  restartPolicy:
+    type: OnFailure
+  taskMax: 1
