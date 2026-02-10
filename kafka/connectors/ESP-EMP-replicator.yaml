@@ -1,0 +1,84 @@
+apiVersion: platform.confluent.io/v1beta1
+kind: Connector
+metadata:
+  labels:
+    app.kubernetes.io/name: replicator
+    app.kubernetes.io/managed-by: yaml
+  name: esp-emp-replicator-v1
+spec:
+  class: io.confluent.connect.replicator.ReplicatorSourceConnector
+  configs:
+    confluent.topic.bootstrap.servers: kafka-thales.ffm-prod.svc.cluster.local:9071
+    confluent.topic.replication.factor: "3"
+    confluent.topic.security.protocol: SSL
+    confluent.topic.ssl.key.password: ${file:/mnt/secrets/replicator-creds/esp-replicator.passphrase:passphrase}
+    confluent.topic.ssl.keystore.location: /mnt/secrets/replicator-creds/esp-replicator-keystore.p12
+    confluent.topic.ssl.keystore.password: ${file:/mnt/secrets/replicator-creds/esp-replicator.passphrase:passphrase}
+    confluent.topic.ssl.truststore.location: /mnt/sslcerts/truststore.p12
+    confluent.topic.ssl.truststore.password: ${file:/mnt/sslcerts/jksPassword.txt:jksPassword}
+    connector.class: io.confluent.connect.replicator.ReplicatorSourceConnector
+    dest.kafka.bootstrap.servers: kafka-thales.ffm-prod.svc.cluster.local:9071
+    dest.kafka.security.protocol: SSL
+    dest.kafka.ssl.key.password: ${file:/mnt/secrets/replicator-creds/esp-replicator.passphrase:passphrase}
+    dest.kafka.ssl.keystore.location: /mnt/secrets/replicator-creds/esp-replicator-keystore.p12
+    dest.kafka.ssl.keystore.password: ${file:/mnt/secrets/replicator-creds/esp-replicator.passphrase:passphrase}
+    dest.kafka.ssl.truststore.location: /mnt/sslcerts/truststore.p12
+    dest.kafka.ssl.truststore.password: ${file:/mnt/sslcerts/jksPassword.txt:jksPassword}
+    kafka.topic.lowercase: "false"
+    key.converter: io.confluent.connect.avro.AvroConverter
+    key.converter.schema.registry.ssl.key.password: ${file:/mnt/secrets/replicator-creds/esp-replicator.passphrase:passphrase}
+    key.converter.schema.registry.ssl.keystore.location: /mnt/secrets/replicator-creds/esp-replicator-keystore.p12
+    key.converter.schema.registry.ssl.keystore.password: ${file:/mnt/secrets/replicator-creds/esp-replicator.passphrase:passphrase}
+    key.converter.schema.registry.ssl.truststore.location: /mnt/sslcerts/truststore.p12
+    key.converter.schema.registry.ssl.truststore.password: ${file:/mnt/sslcerts/jksPassword.txt:jksPassword}
+    key.converter.schema.registry.url: https://schemaregistry-thales.ffm-prod.svc.cluster.local:8081
+    producer.override.ssl.key.password: ${file:/mnt/secrets/replicator-creds/esp-replicator.passphrase:passphrase}
+    producer.override.ssl.keystore.location: /mnt/secrets/replicator-creds/esp-replicator-keystore.p12
+    producer.override.ssl.keystore.password: ${file:/mnt/secrets/replicator-creds/esp-replicator.passphrase:passphrase}
+    producer.override.ssl.keystore.type: PKCS12
+    producer.override.ssl.truststore.location: /mnt/sslcerts/truststore.p12
+    producer.override.ssl.truststore.password: ${file:/mnt/sslcerts/jksPassword.txt:jksPassword}
+    producer.override.ssl.truststore.type: PKCS12
+    src.consumer.group.id: esp-emp-replicator
+    src.kafka.bootstrap.servers: ${file:/mnt/secrets/replicator-creds/esppp_rep.properties:ESP_BOOTSTRAP_URL}
+    src.kafka.security.protocol: SSL
+    src.kafka.ssl.keystore.location: ${file:/mnt/secrets/replicator-creds/esppp_rep.properties:KEYSTORE_FILENAME}
+    src.kafka.ssl.keystore.password: ${file:/mnt/secrets/replicator-creds/esppp_rep.properties:KEYSTORE_PASSWORD}
+    src.kafka.ssl.truststore.location: ${file:/mnt/secrets/replicator-creds/esppp_rep.properties:TRUSTSTORE_FILENAME}
+    src.kafka.ssl.truststore.password: ${file:/mnt/secrets/replicator-creds/esppp_rep.properties:TRUSTSTORE_PASSWORD}
+    src.key.converter: io.confluent.connect.avro.AvroConverter
+    src.key.converter.schema.registry.ssl.key.password: ${file:/mnt/secrets/replicator-creds/esppp_rep.properties:KEYSTORE_PASSWORD}
+    src.key.converter.schema.registry.ssl.keystore.location: ${file:/mnt/secrets/replicator-creds/esppp_rep.properties:KEYSTORE_FILENAME}
+    src.key.converter.schema.registry.ssl.keystore.password: ${file:/mnt/secrets/replicator-creds/esppp_rep.properties:KEYSTORE_PASSWORD}
+    src.key.converter.schema.registry.ssl.truststore.location: ${file:/mnt/secrets/replicator-creds/esppp_rep.properties:TRUSTSTORE_FILENAME}
+    src.key.converter.schema.registry.ssl.truststore.password: ${file:/mnt/secrets/replicator-creds/esppp_rep.properties:TRUSTSTORE_PASSWORD}
+    src.key.converter.schema.registry.url: ${file:/mnt/secrets/replicator-creds/esppp_rep.properties:ESP_SCHEMA_REGISTRY_URL}
+    src.value.converter: io.confluent.connect.avro.AvroConverter
+    src.value.converter.schema.registry.ssl.key.password: ${file:/mnt/secrets/replicator-creds/esppp_rep.properties:KEYSTORE_PASSWORD}
+    src.value.converter.schema.registry.ssl.keystore.location: ${file:/mnt/secrets/replicator-creds/esppp_rep.properties:KEYSTORE_FILENAME}
+    src.value.converter.schema.registry.ssl.keystore.password: ${file:/mnt/secrets/replicator-creds/esppp_rep.properties:KEYSTORE_PASSWORD}
+    src.value.converter.schema.registry.ssl.truststore.location: ${file:/mnt/secrets/replicator-creds/esppp_rep.properties:TRUSTSTORE_FILENAME}
+    src.value.converter.schema.registry.ssl.truststore.password: ${file:/mnt/secrets/replicator-creds/esppp_rep.properties:TRUSTSTORE_PASSWORD}
+    src.value.converter.schema.registry.url: ${file:/mnt/secrets/replicator-creds/esppp_rep.properties:ESP_SCHEMA_REGISTRY_URL}
+    tasks.max: "1"
+    topic.rename.format: topic.customer.billing.HighBillEvent-v1
+    topic.whitelist: com.o2.de.streams.customer.billing.HighBillEvent_v1
+    value.converter: io.confluent.connect.avro.AvroConverter
+    value.converter.schema.registry.ssl.key.password: ${file:/mnt/secrets/replicator-creds/esp-replicator.passphrase:passphrase}
+    value.converter.schema.registry.ssl.keystore.location: /mnt/secrets/replicator-creds/esp-replicator-keystore.p12
+    value.converter.schema.registry.ssl.keystore.password: ${file:/mnt/secrets/replicator-creds/esp-replicator.passphrase:passphrase}
+    value.converter.schema.registry.ssl.truststore.location: /mnt/sslcerts/truststore.p12
+    value.converter.schema.registry.ssl.truststore.password: ${file:/mnt/sslcerts/jksPassword.txt:jksPassword}
+    value.converter.schema.registry.url: https://schemaregistry-thales.ffm-prod.svc.cluster.local:8081
+  connectClusterRef:
+    name: replicator-thales
+    namespace: ffm-prod
+  connectRest:
+    authentication:
+      basic:
+        secretRef: connect-credential
+      type: basic
+  name: ESP-EMP-replicator-v1
+  restartPolicy:
+    type: OnFailure
+  taskMax: 1
